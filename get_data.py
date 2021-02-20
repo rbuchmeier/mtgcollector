@@ -27,11 +27,8 @@ def upload_to_s3(bucket, filename):
     s3_client = boto3.client('s3')
     s3_client.upload_file(filename, bucket, filename)
 
-def main():
-    sld_url = "https://api.scryfall.com/cards/search?order=set&q=e%3Asld&unique=prints"
-    cards = get_cards([], sld_url)
-    print("Found {}".format(len(cards)))
-    nice_cards = [{
+def nicify_cards(cards):
+    return [{
         "uri": card["uri"],
         "name": card["name"],
         "usd": card["prices"]["usd"],
@@ -40,6 +37,12 @@ def main():
         "collector_number": card["collector_number"],
         "image": card["image_uris"]["normal"]
     } for card in cards]
+
+def main():
+    sld_url = "https://api.scryfall.com/cards/search?order=set&q=e%3Asld&unique=prints"
+    cards = get_cards([], sld_url)
+    print("Found {}".format(len(cards)))
+    nice_cards = nicify_cards(cards)
     today = date.today()
     last_updated_date = today.strftime("%Y-%m-%d")
     file_name = f'{last_updated_date}-sld.csv'
