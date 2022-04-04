@@ -27,6 +27,11 @@ def upload_to_s3(bucket, filename):
     s3_client = boto3.client('s3')
     s3_client.upload_file(filename, bucket, filename)
 
+def get_image(card):
+    image_uris = card.get("image_uris")
+    if image_uris:
+        return card["image_uris"]["normal"]
+
 def nicify_cards(cards):
     return [{
         "uri": card["uri"],
@@ -35,7 +40,7 @@ def nicify_cards(cards):
         "usd_foil": card["prices"]["usd_foil"],
         "tix": card["prices"]["tix"],
         "collector_number": card["collector_number"],
-        "image": card["image_uris"]["normal"]
+        "image": get_image(card),
     } for card in cards]
 
 def main():
