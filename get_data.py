@@ -31,6 +31,8 @@ def get_image(card):
     image_uris = card.get("image_uris")
     if image_uris:
         return card["image_uris"]["normal"]
+    if card.get("card_faces"):
+        return card["card_faces"][0]["image_uris"]["normal"]
 
 def nicify_cards(cards):
     return [{
